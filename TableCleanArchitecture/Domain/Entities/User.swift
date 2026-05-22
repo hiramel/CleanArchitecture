@@ -17,7 +17,7 @@ import Foundation
 //🔹 Identifiable
 //Porque SwiftUI lo necesita.
 
-struct User: Identifiable, Equatable {
+struct User: Identifiable, Equatable, Hashable {
     let id: String
     let name: String
     let email: String
