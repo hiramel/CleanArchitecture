@@ -24,7 +24,7 @@ struct TableCleanArchitectureApp: App {
                 deleteUserUseCase: deleteUserUseCase
             )
             
-            ListUsersView(viewModel: viewModel)
+            MainTabView(viewModel: viewModel)
         }
     }
 }
