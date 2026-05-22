@@ -9,28 +9,65 @@ import XCTest
 @testable import TableCleanArchitecture
 
 final class TableCleanArchitectureTests: XCTestCase {
+    @MainActor
+    func test_getUsers_returnsUsersSuccessfully() async throws {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // Arrange
+        let mockRepository = MockUsersRepository()
+
+        mockRepository.usersToReturn = [
+            User(id: "1", name: "Hiram", email: "hiram@gmail.com", description: "description")
+        ]
+
+        let useCase = GetUsersUseCase(repository: mockRepository)
+
+        // Act
+        let users = try await useCase.execute()
+
+        // Assert
+        XCTAssertEqual(users.count, 1)
+        XCTAssertEqual(users.first?.name, "Hiram")
     }
+    @MainActor
+    func test_viewModel_loadUsers_updatesUsers() async throws {
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        // Arrange
+        let mockUseCase = MockGetUsersUseCase()
+
+        mockUseCase.usersToReturn = [
+            User(id: "1", name: "Hiram", email: "hiram@gmail.com", description: "description")
+        ]
+        let mockDeleteUserUseCase = MockDeleteUserUseCase()
+
+        let viewModel = UsersViewModel(getUsersUseCase: mockUseCase, deleteUserUseCase: mockDeleteUserUseCase)
+
+        // Act
+        await viewModel.loadUsers()
+
+        // Assert
+        XCTAssertEqual(viewModel.users.count, 1)
+        XCTAssertEqual(viewModel.users.first?.name, "Hiram")
     }
+   
+    @MainActor
+    func test_repository_mapsDTOsCorrectly() async throws {
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
+        // Arrange
+        let mockDataSource = MockUsersRemoteDataSource()
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+        mockDataSource.dtosToReturn = [
+            UserDTO(id: "1", name: "Hiram", email: "hiram@gmail.com", description: "description")
+        ]
+
+        let repository = UsersRepositoryImpl(
+            remoteDataSource: mockDataSource
+        )
+
+        // Act
+        let users = try await repository.getUsers()
+
+        // Assert
+        XCTAssertEqual(users.first?.name, "Hiram")
     }
 
 }
