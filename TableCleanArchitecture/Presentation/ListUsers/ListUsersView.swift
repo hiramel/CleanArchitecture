@@ -19,18 +19,20 @@ struct ListUsersView: View {
                 } else {
                     List {
                         ForEach(viewModel.users) { user in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(user.name)
-                                    .font(.headline)
-                                
-                                Text(user.email)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(user.description)
+                            
+                            NavigationLink(value: user) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(user.name)
+                                        .font(.headline)
+                                    
+                                    Text(user.email)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text(user.description)
                                         .font(.caption)
                                         .foregroundStyle(.gray)
-                                
+                                }
                             }
                         }
                         .onDelete(perform: deleteUser)
@@ -38,6 +40,9 @@ struct ListUsersView: View {
                 }
             }
             .navigationTitle("Users")
+            .navigationDestination(for: User.self) { user in
+                UserDetails(user: user)
+            }
         }
         .task {
             await viewModel.loadUsers()
