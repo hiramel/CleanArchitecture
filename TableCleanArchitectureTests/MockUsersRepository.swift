@@ -26,7 +26,6 @@ final class MockUsersRepository: UsersRepository {
     }
 
     func deleteUser(id: String) async throws {
-
         deleteUserCalled = true
         deletedUserId = id
     }

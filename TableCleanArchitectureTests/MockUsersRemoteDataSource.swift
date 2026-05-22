@@ -19,7 +19,6 @@ final class MockUsersRemoteDataSource: RemoteUsersDataSource {
     }
 
     var dtosToReturn: [UserDTO] = []
-
     func fetchUsers() async throws -> [UserDTO] {
         dtosToReturn
     }

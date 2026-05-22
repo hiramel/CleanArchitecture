@@ -11,7 +11,6 @@ import Foundation
 final class MockGetUsersUseCase: GetUsersUseCaseProtocol {
 
     var usersToReturn: [User] = []
-
     func execute() async throws -> [User] {
         usersToReturn
     }
