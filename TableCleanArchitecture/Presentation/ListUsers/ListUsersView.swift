@@ -12,27 +12,16 @@ struct ListUsersView: View {
     let viewModel: UsersViewModel
     
     var body: some View {
-        NavigationStack {
             Group {
                 if viewModel.isLoading {
                     ProgressView("Loading users...")
                 } else {
                     List {
                         ForEach(viewModel.users) { user in
-                            
-                            NavigationLink(value: user) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(user.name)
-                                        .font(.headline)
-                                    
-                                    Text(user.email)
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                    
-                                    Text(user.description)
-                                        .font(.caption)
-                                        .foregroundStyle(.gray)
-                                }
+                            NavigationLink {
+                              UserDetails(user: user)
+                            } label: {
+                                UserRowView(user: user)
                             }
                         }
                         .onDelete(perform: deleteUser)
@@ -40,13 +29,9 @@ struct ListUsersView: View {
                 }
             }
             .navigationTitle("Users")
-            .navigationDestination(for: User.self) { user in
-                UserDetails(user: user)
+            .task {
+                await viewModel.loadUsers()
             }
-        }
-        .task {
-            await viewModel.loadUsers()
-        }
     }
     
     // 🔥 Método que conecta con el ViewModel async

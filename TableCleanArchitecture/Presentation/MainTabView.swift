@@ -19,14 +19,21 @@ struct MainTabView: View {
             .tabItem {
                 Label("Users", systemImage: "person.3")
             }
-            Text("Home Comming soon")
-                .tabItem {
-                 Label("Home", systemImage: "house")
-                }
-            Text("Settings")
-                .tabItem {
-                    Label("Settings Comming soon", systemImage: "gearshape")
-                }
+            NavigationStack {
+                Text("Home Screen")
+                    .navigationTitle("Home")
+            }
+            .tabItem {
+                Label("Home", systemImage: "house")
+            }
+            
+            NavigationStack {
+                Text("Settings")
+                    .navigationTitle("Settings")
+            }
+            .tabItem {
+                Label("Settings Comming soon", systemImage: "gearshape")
+            }
         }
     }
 }
