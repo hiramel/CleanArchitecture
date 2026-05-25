@@ -12,25 +12,29 @@ struct ListUsersView: View {
     let viewModel: UsersViewModel
     
     var body: some View {
-            Group {
-                if viewModel.isLoading {
-                    ProgressView("Loading users...")
-                } else {
-                    List {
-                        ForEach(viewModel.users) { user in
-                            NavigationLink {
-                              UserDetails(user: user)
-                            } label: {
-                                UserRowView(user: user)
-                            }
-                        }
-                        .onDelete(perform: deleteUser)
-                    }
-                }
-            }
+        
+        content
             .navigationTitle("Users")
             .task {
                 await viewModel.loadUsers()
+            }
+    }
+        
+        @ViewBuilder
+        private var content: some View {
+            if viewModel.isLoading {
+                ProgressView("Loading users...")
+            } else {
+                List {
+                    ForEach(viewModel.users) { user in
+                        NavigationLink {
+                            UserDetails(user: user)
+                        } label: {
+                            UserRowView(user: user)
+                        }
+                    }
+                    .onDelete(perform: deleteUser)
+                }
             }
     }
     
